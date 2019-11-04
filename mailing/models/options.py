@@ -3,6 +3,7 @@
 from datetime import datetime
 import mimetypes
 import os
+import pathlib
 
 from django.core.validators import MaxLengthValidator
 from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE
@@ -71,9 +72,15 @@ class AbstractBaseAttachment(models.Model):
         blank=True)
 
     def get_file_path(self):
+        # DEPRECATED because file path might not exist in filesystem!
         raise NotImplementedError(
             "Subclasses of 'AbstractBaseAttachment' must implement a "
             "'get_file_path' method.")
+
+    def _get_openable_file(self):
+        raise NotImplementedError(
+            "Subclasses of 'AbstractBaseAttachment' must implement a "
+            "'_get_file_to_open' method.")
 
     def get_mime_type(self):
         mime_type = self.mime_type
@@ -83,16 +90,16 @@ class AbstractBaseAttachment(models.Model):
         return mime_type
 
     def get_file_name(self):
-        return self.filename or os.path.basename(self.get_file_path())
+        return self.filename
 
     def get_file_content(self):
-        path = self.get_file_path()
+        openable_file = self._get_openable_file()
         mime_type = self.get_mime_type()
         basetype = mime_type.split('/', 1)[0]
         read_mode = 'r' if basetype == 'text' else 'rb'
         content = None
 
-        with open(path, read_mode) as f:
+        with openable_file.open(read_mode) as f:
             try:
                 content = f.read()
             except UnicodeDecodeError:
@@ -102,7 +109,7 @@ class AbstractBaseAttachment(models.Model):
 
         # If the previous read in text mode failed, try binary mode.
         if content is None:
-            with open(path, 'rb') as f:
+            with openable_file.open('rb') as f:
                 content = f.read()
 
         return content
@@ -122,7 +129,14 @@ class AbstractBaseStaticAttachment(AbstractBaseAttachment):
     objects = StaticAttachmentManager()
 
     def get_file_path(self):
+        # DEPRECATED
         return self.attachment
+
+    def _get_openable_file(self):
+        return pathlib.Path(self.attachment)
+
+    def get_file_name(self):
+        return super().get_file_name() or os.path.basename(self.attachment)
 
 
 class AbstractBaseDynamicAttachment(AbstractBaseAttachment):
@@ -138,4 +152,11 @@ class AbstractBaseDynamicAttachment(AbstractBaseAttachment):
     objects = DynamicAttachmentManager()
 
     def get_file_path(self):
+        # DEPRECATED
         return self.attachment.path
+
+    def _get_openable_file(self):
+        return self.attachment
+
+    def get_file_name(self):
+        return super().get_file_name() or os.path.basename(self.attachment.name)
