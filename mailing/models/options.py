@@ -78,6 +78,10 @@ class AbstractBaseAttachment(models.Model):
             "'get_file_path' method.")
 
     def _get_openable_file(self):
+        """Return an object that can be used like:
+            with obj.open(mode) as f:
+                content = f.read()
+        """
         raise NotImplementedError(
             "Subclasses of 'AbstractBaseAttachment' must implement a "
             "'_get_file_to_open' method.")
