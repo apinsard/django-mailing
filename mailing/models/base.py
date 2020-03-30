@@ -201,7 +201,8 @@ class Mail(models.Model):
         choices=STATUS_CHOICES, default=STATUS_DRAFT,
         verbose_name=_("status"))
     scheduled_on = models.DateTimeField(
-        default=timezone.now, verbose_name=_("scheduled on"))
+        default=timezone.now, verbose_name=_("scheduled on"),
+        db_index=True)
     sent_on = models.DateTimeField(
         blank=True, null=True, editable=False, verbose_name=_("sent on"))
     subject = models.CharField(
