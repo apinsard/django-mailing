@@ -3,7 +3,6 @@
 from itertools import product
 import re
 
-from django.conf import settings
 from django.conf.urls import url
 from django.contrib import admin
 from django.db.models import Q
@@ -14,7 +13,7 @@ from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from .conf import pytz_is_available, SUBJECT_PREFIX
+from .conf import SUBJECT_PREFIX
 from .forms import (
     CampaignMailHeaderForm, MailHeaderForm, CampaignStaticAttachmentForm,
     MailStaticAttachmentForm,
@@ -117,8 +116,6 @@ class MailAdmin(admin.ModelAdmin):
     ]
     list_filter = ['status', 'campaign']
     search_fields = ['subject', 'headers__value']
-    if not settings.USE_TZ or pytz_is_available:
-        date_hierarchy = 'scheduled_on'
 
     fieldsets = [
         (_("Properties"), {'fields': [
