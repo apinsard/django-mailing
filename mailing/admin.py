@@ -147,8 +147,6 @@ class MailAdmin(admin.ModelAdmin):
     def get_headers_search_results(self, request, queryset, search_term):
         terms = re.split(r'(?:^|\s+)([a-z0-9,_-]+:(?:".*?"|[^ ]+))(?:\s+|$)', search_term)
         terms = filter(None, terms)
-        if not terms:
-            return queryset, False
         query = Q()
         for term in terms:
             term = term.split(":", 1)
@@ -166,7 +164,10 @@ class MailAdmin(admin.ModelAdmin):
                     headers__name__iexact=headers[0],
                     headers__value__icontains=header_value
                 )
-        return queryset.filter(query), True
+        if query:
+            return queryset.filter(query), True
+        else:
+            return queryset, False
 
 
 @admin.register(SubscriptionType)
