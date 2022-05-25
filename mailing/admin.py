@@ -3,14 +3,14 @@
 from itertools import product
 import re
 
-from django.conf.urls import url
+from django.urls import path
 from django.contrib import admin
 from django.db.models import Q
 from django.db.models.functions import Lower
 from django import forms
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.urls import reverse
+from django.urls import path, reverse
 from django.utils.translation import gettext_lazy as _
 
 from .conf import SUBJECT_PREFIX
@@ -238,9 +238,11 @@ class SubscriptionAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            url(r'^bulk-subscription-management/$',
+            path(
+                'bulk-subscription-management/',
                 self.bulk_subscription_management_view,
-                name='bulk_subscription_management'),
+                name='bulk_subscription_management',
+            ),
         ]
         return my_urls + urls
 
