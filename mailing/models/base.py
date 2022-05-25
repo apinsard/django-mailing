@@ -96,7 +96,7 @@ class Subscription(models.Model):
 class Campaign(models.Model):
 
     class Meta:
-        ordering = ['name']
+        ordering = ['key']
         verbose_name = _("e-mail campaign")
         verbose_name_plural = _("e-mail campaigns")
 
