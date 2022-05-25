@@ -11,7 +11,7 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .conf import SUBJECT_PREFIX
 from .forms import (

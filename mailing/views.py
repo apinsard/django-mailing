@@ -4,7 +4,7 @@ from django.core.exceptions import SuspiciousOperation
 from django.core.signing import Signer, BadSignature
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import View, FormView
 
 from .conf import MIRROR_SIGNING_SALT, SUBSCRIPTION_SIGNING_SALT

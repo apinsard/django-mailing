@@ -10,7 +10,7 @@ from django.db import models
 from django.template import Template
 from django.template.loader import get_template
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ..conf import (
     TextConfRef, TEMPLATES_UPLOAD_DIR, SUBJECT_PREFIX, MIRROR_SIGNING_SALT,

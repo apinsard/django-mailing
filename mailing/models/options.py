@@ -8,7 +8,7 @@ import pathlib
 from django.core.validators import MaxLengthValidator
 from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ..conf import ATTACHMENTS_DIR, ATTACHMENTS_UPLOAD_DIR
 from .manager import (
