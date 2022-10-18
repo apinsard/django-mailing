@@ -18,7 +18,7 @@ from django.utils.html import strip_tags
 from .conf import (
     UNEXISTING_CAMPAIGN_FAIL_SILENTLY, SUBSCRIPTION_SIGNING_SALT, DEBUG_EMAIL,
 )
-from .models import Mail, Campaign, Blacklist
+from .models import Mail, Campaign, Blacklist, MailHeader
 
 __all__ = [
     'render_mail', 'queue_mail', 'send_mail', 'html_to_text', 'mail_logger',
@@ -183,8 +183,12 @@ def render_mail(subject, html_template, headers, context=None, **kwargs):
     mail.text_body = text_body
     mail.save()
 
-    for name, value in rendered_headers.items():
-        mail.headers.create(name=name, value=value)
+    MailHeader.objects.bulk_create(
+        [
+            MailHeader(mail=mail, name=name, value=value)
+            for name, value in rendered_headers.items()
+        ]
+    )
 
     for attachments in ['static_attachments', 'dynamic_attachments']:
         """Handle both static and dynamic attachments with the same logic."""
