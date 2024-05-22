@@ -90,6 +90,8 @@ class Subscription(models.Model):
 
     def save(self, *args, **kwargs):
         self.last_modified = timezone.now()
+        if update_fields := kwargs.get('update_fields'):
+            kwargs['update_fields'] = set(update_fields) | {'last_modified'}
         super().save(*args, **kwargs)
 
 
